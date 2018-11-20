@@ -103,14 +103,14 @@ public class FacturaDao {
     }
 
     public FacturaBean create(FacturaBean oFacturaBean) throws Exception {
-        String strSQL = "INSERT INTO " + ob;
-        strSQL += "(" + oFacturaBean.getColumns() + ")";
-        strSQL += " VALUES ";
-        strSQL += "(" + oFacturaBean.getValues() + ")";
+    	String strSQL = "INSERT INTO " + ob + " ( "+ob+".id,  "+ob+".fecha,  "+ob+".iva, "+ob+".id_usuario) VALUES (NULL, ?,?,?); ";
         ResultSet oResultSet = null;
         PreparedStatement oPreparedStatement = null;
         try {
             oPreparedStatement = oConnection.prepareStatement(strSQL);
+    		oPreparedStatement.setString(1, oFacturaBean.getFecha());
+            oPreparedStatement.setDouble(2, oFacturaBean.getIva());
+            oPreparedStatement.setInt(3, oFacturaBean.getId_usuario());  
             oPreparedStatement.executeUpdate();
             oResultSet = oPreparedStatement.getGeneratedKeys();
             if (oResultSet.next()) {
@@ -134,13 +134,17 @@ public class FacturaDao {
  
 	public int update(FacturaBean oFacturaBean) throws Exception {
 		int iResult = 0;
-		//String strSQL = "UPDATE " + ob + " SET "+ob+".fecha = ?, "+ob+".iva = ?, "+ob+".id_usuario=?  WHERE "+ob+".id = ?;";
-                String strSQL = "UPDATE " + ob + " SET ";
-                strSQL += oFacturaBean.getPairs();
+		String strSQL = "UPDATE " + ob + " SET "+ob+".fecha = ?, "+ob+".iva = ?, "+ob+".id_usuario=?  WHERE "+ob+".id = ?;";
+                //String strSQL = "UPDATE " + ob + " SET ";
+                //strSQL += oFacturaBean.getPairs();
                 
 		PreparedStatement oPreparedStatement = null;
 		try {
 			oPreparedStatement = oConnection.prepareStatement(strSQL);
+			oPreparedStatement.setString(1, oFacturaBean.getFecha());
+			oPreparedStatement.setDouble(2, oFacturaBean.getIva());
+            oPreparedStatement.setDouble(3, oFacturaBean.getId_usuario());
+            oPreparedStatement.setInt(4, oFacturaBean.getId());
 			iResult = oPreparedStatement.executeUpdate();
 
 		} catch (SQLException e) {
